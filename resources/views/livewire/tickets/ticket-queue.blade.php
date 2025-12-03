@@ -15,6 +15,7 @@
                     <th class="px-4 py-2 text-left">Status</th>
                     <th class="px-4 py-2 text-left">Solicitante</th>
                     <th class="px-4 py-2 text-left">Criado em</th>
+                    <th class="px-4 py-2 text-left">Técnico Responsável</th>
                     <th class="px-4 py-2 text-right">Ações</th>
                 </tr>
                 </thead>
@@ -35,6 +36,10 @@
 
                         <td class="px-4 py-2">
                             {{ $ticket->created_at->format('d/m/Y H:i') }}
+                        </td>
+
+                        <td class="px-4 py-2">
+                            {{ $ticket->tech->name ?? '-' }}
                         </td>
 
                         <td class="px-4 py-2 text-right">

@@ -38,18 +38,71 @@
     <div class="rounded-xl border border-gray-800 bg-gray-900/70 p-5 space-y-3">
         <h3 class="text-sm font-semibold text-gray-200">Nova interação</h3>
 
-        <form wire:submit.prevent="addInteraction" class="space-y-3">
-            <textarea
-                wire:model.defer="description"
-                rows="4"
-                class="w-full rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Digite sua resposta, atualização ou comentário sobre o chamado..."
-            ></textarea>
+        <form wire:submit.prevent="addInteraction" class="space-y-4">
 
-            @error('description')
-            <p class="text-xs text-red-400">{{ $message }}</p>
-            @enderror
+            {{-- Tipo da interação --}}
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-200">
+                    Tipo da interação
+                </label>
 
+                <div class="flex flex-col sm:flex-row gap-3">
+
+                    {{-- FollowUp --}}
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            wire:model="type"
+                            value="FollowUp"
+                            class="text-blue-500 focus:ring-blue-400"
+                        >
+                        <span class="text-gray-200">Follow-up</span>
+                    </label>
+
+                    @if (auth()->user()->type === \App\Enums\UserType::TECH)
+                    {{-- Task --}}
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            wire:model="type"
+                            value="Task"
+                            class="text-amber-500 focus:ring-amber-400"
+                        >
+                        <span class="text-amber-300">Tarefa</span>
+                    </label>
+
+                    {{-- Solution --}}
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            wire:model="type"
+                            value="Solution"
+                            class="text-sky-500 focus:ring-sky-400"
+                        >
+                        <span class="text-sky-300">Solução</span>
+                    </label>
+                </div>
+                @endif
+                @error('type')
+                <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Mensagem --}}
+            <div>
+        <textarea
+            wire:model.defer="description"
+            rows="4"
+            class="w-full rounded-md border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Digite sua mensagem..."
+        ></textarea>
+
+                @error('description')
+                <p class="text-xs text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Botão --}}
             <div class="flex justify-end">
                 <button
                     type="submit"
@@ -61,6 +114,7 @@
                 </button>
             </div>
         </form>
+
 
     </div>
 
@@ -78,21 +132,19 @@
                         $author = $interaction->user;
 
                         // Descobrir se é o usuário que abriu ou o técnico
-                        $isFromUser = $author && $ticket->user && $author->id === $ticket->user->id;
-                        $isFromTech = $author && $ticket->tech && $author->id === $ticket->tech->id;
+                        $isFromTech = $author->type === \App\Enums\UserType::TECH;
 
                         // Alinhamento do "balão" (user à esquerda, tech à direita)
                         $rowAlignment = $isFromTech ? 'justify-end' : 'justify-start';
                         $textAlignment = $isFromTech ? 'text-right' : 'text-left';
 
-                        // Tipo da interação (se vier enum, pega o value; se vier string, usa direto)
-                        $type = $interaction->type instanceof \BackedEnum ? $interaction->type->value : $interaction->type;
+                        $type = $interaction->type->value;
 
                         // Cores conforme o type
                         $colorClasses = match($type) {
                             'Task' => 'bg-amber-900/40 border-amber-500 text-amber-100',
                             'Solution' => 'bg-sky-900/40 border-sky-500 text-sky-100',
-                            default => 'bg-gray-900/60 border-gray-700 text-gray-100', // FollowUp ou qualquer outro
+                            default => 'bg-gray-900/60 border-gray-700 text-gray-100'
                         };
                     @endphp
 
@@ -108,7 +160,7 @@
                                         <span class="ml-1 text-[10px] uppercase tracking-wide">
                                         (Técnico)
                                     </span>
-                                    @elseif ($isFromUser)
+                                    @else
                                         <span class="ml-1 text-[10px] uppercase tracking-wide">
                                         (Solicitante)
                                     </span>

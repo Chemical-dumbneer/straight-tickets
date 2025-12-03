@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tickets;
 
+use App\Enums\InteractionType;
 use App\Models\Ticket;
 use App\Models\TicketInteraction;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,6 +12,7 @@ class TicketShow extends Component
 {
     public Ticket $ticket;
     public string $description = '';
+    public string $type = 'FollowUp';
 
     /** @var Collection<int, TicketInteraction> */
     public Collection $interactions;
@@ -28,6 +30,7 @@ class TicketShow extends Component
     {
         return [
             'description' => ['required','string','min:3'],
+            'type' => ['required','in:FollowUp,Task,Solution'],
         ];
     }
 
@@ -40,13 +43,15 @@ class TicketShow extends Component
         $interaction = TicketInteraction::create([
             'ticket_id' => $this->ticket->id,
             'user_id' => $user->id,
-            'type' => $this->type,
+            'timelinePosition' => $this->ticket->interactions()->count()+1,
+            'type' => InteractionType::from($this->type),
             'description' => $this->description,
         ]);
 
         $this->interactions->prepend($interaction->load('user'));
 
         $this->description = '';
+        $this->type = 'FollowUp';
     }
     public function render()
     {

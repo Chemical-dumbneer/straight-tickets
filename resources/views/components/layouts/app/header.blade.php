@@ -122,7 +122,6 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Menu')">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navbar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Início') }}</flux:navbar.item>
                     <flux:navbar.item icon="queue-list" :href="route('tickets.index')" :current="request()->routeIs('tickets.index')" wire:navigate>{{ __('Chamados') }}</flux:navbar.item>
                     @auth

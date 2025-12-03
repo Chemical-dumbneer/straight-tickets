@@ -14,7 +14,7 @@ class UserController extends Controller
         return view('users.index');
     }
 
-    public function show(int $id)
+    public function edit(int $id)
     {
         return view('users.edit',['user' => User::find($id)]);
     }

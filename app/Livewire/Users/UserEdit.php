@@ -26,7 +26,7 @@ class UserEdit extends Component
         $this->name  = $user->name;
         $this->email = $user->email;
 
-        $this->type = $user->type;
+        $this->type = $user->type->value;
     }
 
     protected function rules(): array

@@ -23,7 +23,7 @@ class TicketQueue extends Component
             $query->where('user_id', $user->id);
         }
 
-        $tickets = $query->paginate(10);
+        $tickets = $query->paginate(15);
 
         return view('livewire.tickets.ticket-queue', [
             'tickets' => $tickets,
