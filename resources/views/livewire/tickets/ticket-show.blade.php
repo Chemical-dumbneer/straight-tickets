@@ -14,6 +14,42 @@
                     </span>
                     em
                     {{ $ticket->created_at->format('d/m/Y H:i') }}
+                    —
+                    @if($ticket->tech_id===null)
+                        Disponível para atribuição
+                        <form wire:submit="assignMeToThis" class="space-y-4">
+                            <button
+                                type="submit"
+                                class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+                                wire:loading.attr="disabled"
+                            >
+                                <span wire:loading.remove>Assumir Chamado</span>
+                                <span wire:loading>Assumindo...</span>
+                            </button>
+                        </form>
+                    @elseif($ticket->tech_id===auth()->user()->id)
+                        <span class="text-gray-200">
+                            Atribuído para você
+                        </span>
+                        <form wire:submit="removeMeFromThis" class="space-y-4">
+                            <button
+                                type="submit"
+                                class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+                                wire:loading.attr="disabled"
+                            >
+                                <span wire:loading.remove>Abandonar Chamado</span>
+                                <span wire:loading>Abandonando...</span>
+                            </button>
+                        </form>
+                    @else
+                        @php
+                            $setTech = $ticket->tech;
+                        @endphp
+                        Atribuido ao técnico
+                        <span class="text-gray-200">
+                            {{ $setTech->name }}
+                        </span>
+                    @endif
                 </p>
             </div>
 

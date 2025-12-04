@@ -5,6 +5,7 @@ namespace App\Livewire\Tickets;
 use App\Enums\InteractionType;
 use App\Models\Ticket;
 use App\Models\TicketInteraction;
+use App\services\TicketService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
@@ -13,9 +14,11 @@ class TicketShow extends Component
     public Ticket $ticket;
     public string $description = '';
     public string $type = 'FollowUp';
+    protected TicketService $ticketService;
 
     /** @var Collection<int, TicketInteraction> */
     public Collection $interactions;
+
 
     public function mount(Ticket $ticket): void
     {
@@ -26,6 +29,11 @@ class TicketShow extends Component
             ->get();
     }
 
+    public function boot(TicketService $ticketService)
+    {
+        $this->ticketService = $ticketService;
+    }
+
     protected function rules(): array
     {
         return [
@@ -34,24 +42,53 @@ class TicketShow extends Component
         ];
     }
 
-    public function addInteraction(): void
+    public function addInteraction()
     {
         $this->validate();
 
         $user = auth()->user();
 
-        $interaction = TicketInteraction::create([
-            'ticket_id' => $this->ticket->id,
-            'user_id' => $user->id,
-            'timelinePosition' => $this->ticket->interactions()->count()+1,
-            'type' => InteractionType::from($this->type),
-            'description' => $this->description,
-        ]);
+        $this->ticketService->addInteraction(
+            $this->ticket,
+            $user,
+            $this->description,
+            InteractionType::from($this->type)
+        );
 
-        $this->interactions->prepend($interaction->load('user'));
+        session()->flash('success', match($this->type) {
+            'FollowUp'=>'Acompanhamento inserido com sucesso!',
+            'Task'=>'Tarefa inserida com sucesso! Status do chamado alterado para Pendente.',
+            'Solution'=>'Chamado solucionado com sucesso!',
+            });
+
+        $this->ticket = $this->ticket->fresh()->load(['interactions','user']);
 
         $this->description = '';
         $this->type = 'FollowUp';
+
+        return $this->redirectRoute('tickets.show', $this->ticket);
+    }
+
+    public function assignMeToThis()
+    {
+        $me = auth()->user();
+        $this->ticketService->assignTicket(
+            $this->ticket,
+            $me,
+        );
+        $this->ticket->tech_id = $me->id;
+
+        session()->flash('success', 'Chamado atribuído com sucesso!');
+    }
+
+    public function removeMeFromThis()
+    {
+        $this->ticketService->assignTicket(
+            $this->ticket
+        );
+        $this->ticket->tech_id = null;
+
+        session()->flash('success', 'Chamado abandonado com sucesso!');
     }
     public function render()
     {
