@@ -11,9 +11,11 @@ class TicketCreate extends Component
 {
     public string $title = '';
     public string $description = '';
+    protected $ticketService;
 
-    public function __construct(TicketService $ticketService)
+    public function boot(TicketService $ticketService)
     {
+        $this->ticketService = $ticketService;
     }
 
     protected function rules(): array

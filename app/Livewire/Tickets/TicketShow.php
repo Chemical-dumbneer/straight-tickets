@@ -76,9 +76,10 @@ class TicketShow extends Component
             $this->ticket,
             $me,
         );
-        $this->ticket->tech_id = $me->id;
 
-        session()->flash('success', 'Chamado atribuído com sucesso!');
+        $this->ticket = $this->ticket->fresh()->load(['interactions','user']);
+
+        return $this->redirectRoute('tickets.show', $this->ticket);
     }
 
     public function removeMeFromThis()
@@ -86,9 +87,10 @@ class TicketShow extends Component
         $this->ticketService->assignTicket(
             $this->ticket
         );
-        $this->ticket->tech_id = null;
 
-        session()->flash('success', 'Chamado abandonado com sucesso!');
+        $this->ticket = $this->ticket->fresh()->load(['interactions','user']);
+
+        return $this->redirectRoute('tickets.show', $this->ticket);
     }
     public function render()
     {

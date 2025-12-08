@@ -4,6 +4,7 @@ namespace App\services;
 
 use App\Enums\InteractionType;
 use App\Enums\TicketStatus;
+use App\Enums\UserType;
 use App\Models\Ticket;
 use App\Models\TicketInteraction;
 use App\Models\User;
@@ -18,6 +19,11 @@ class TicketService
             'status' => TicketStatus::OPEN,
             'user_id' => $user->id,
         ]);
+    }
+
+    public function update(int $id, array $values): Ticket
+    {
+        //a implementar
     }
 
     public function addInteraction(Ticket $ticket, User $user, string $description, InteractionType $type): void
@@ -46,5 +52,21 @@ class TicketService
         $ticket->tech_id = ($user === null) ? null : $user->id;
 
         $ticket->save();
+    }
+
+    public function listForUser(User $user)
+    {
+        if ($user->type === UserType::TECH) {
+            return Ticket::with('users')->get();
+        }
+
+        return Ticket::with('users')
+            ->where('user_id', $user->id)
+            ->get();
+    }
+
+    public function findById(int $id)
+    {
+        return Ticket::findOrFail($id);
     }
 }

@@ -6,6 +6,8 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -35,9 +37,15 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('/ticket/{id}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+    Route::view('/tickets', 'tickets.index')->name('tickets.index');
+    Route::view('/tickets/create', 'tickets.create')->name('tickets.create');
+    Route::view('/users', 'users.index')->name('users.index');
+
+    Route::get('/tickets/{id}', function ($id) {
+        return view('tickets.show', ['ticket' => Ticket::with('user')->findOrFail($id)]);
+    })->name('tickets.show');
+
+    Route::get('/users/{id}/edit', function ($id) {
+        return view('users.edit',['user' => User::findOrFail($id)]);
+    })->name('users.edit');
 });
