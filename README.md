@@ -1,123 +1,223 @@
-# WebService – Sistema de Chamados (Projeto da Disciplina de Web Servidor)
+# Straight Tickets
+**Um sistema leve, direto e eficiente para gestão de chamados internos.**  
+Versão: **v1.0.0-beta**
 
-## Integrantes da Equipe
+---
+
+## Sobre o Projeto
+
+Straight Tickets é um sistema web desenvolvido em **Laravel + Livewire** focado em simplicidade, desempenho e facilidade de uso.  
+O objetivo é fornecer uma plataforma direta para registrar, acompanhar e interagir com chamados técnicos dentro de uma organização.
+
+![Tela de recepção](assets/screenshot-welcome.png)
+
+---
+
+## Integrantes do Projeto
+
 - **Jean Pires de Carlos**
 - **André Luiz Pereira Emílio**
 
+---
+
+## Tecnologias Utilizadas
+
+- **Laravel 10**
+- **Livewire 3**
+- **Blade Components**
+- **TailwindCSS**
+- **PostgreSQL**
+- **Laravel Breeze (Starter Kit)**
+- **Alpine.js**
+- **Icons Heroicons / Blade UI Icons**
+
+---
+
+## Funcionalidades Principais
+
+- Registro e autenticação de usuários
+- Abertura e acompanhamento de chamados
+- Atribuição de técnicos
+- Interações entre usuários e técnicos dentro do ticket
+- Interface moderna com cards clicáveis
+- Filtros inteligentes
+- Painéis personalizados para usuários e técnicos
+- Padrões de arquitetura sólidos (Service Layer + Policies)
+
+---
+
+# Status da Versão Beta
+
+A versão atual está **totalmente funcional** no fluxo web:
+
+- ✔ CRUD completo de tickets
+- ✔ Painéis distintos para usuários comuns e técnicos
+- ✔ Atribuição de responsáveis
+- ✔ Interações dentro dos tickets
+- ✔ Interface remodelada para maior clareza e usabilidade
+- ✔ Paginação e filtros funcionando
+- ✔ Segurança via Policies
+
+### Funcionalidades planejadas para próximas releases
+
+- **API REST completa** com:
+    - Autenticação via Sanctum
+    - Versionamento (`v1`, `v2`)
+    - Endpoints para tickets, usuários e interações
+- Melhorias de UX no painel de técnicos
+- Dashboard analítico com gráficos
+
+---
+
+# Instalação e Execução
 <details>
-<summary><strong>Relatório do Projeto</strong></summary>
+<summary><strong>Expandir instruções</strong></summary>
 
-### ✔️ Funcionalidades Implementadas
-- Cadastro e autenticação de usuários.
-- Abertura, visualização, edição e interação em chamados.
-- Atribuição de chamados a técnicos.
-- Registro de interações com diferentes tipos (FollowUp, Solução, etc.).
-- Regras de negócio encapsuladas em **classes de serviço**.
-- Interface utilizando **Livewire 3**.
-- Seeders iniciais contendo um técnico e um usuário.
-- Dashboard com métricas por tipo de usuário.
+### Requisitos
 
-### ❗ Funcionalidades Faltantes / Bugs Conhecidos
-- **API REST ainda não implementada**, embora toda a lógica esteja preparada.
-- **Registro aberto**: qualquer usuário pode criar conta.
-- **UI simples**: interface ainda não totalmente refinada.
-
-### 👥 Participação dos Integrantes
-
-#### Jean Pires de Carlos
-- Arquitetura geral do projeto.
-- Implementação de Models, Migrations, Services e Repositories.
-- Desenvolvimento dos componentes Livewire.
-- Implementação das regras de negócio.
-- Configuração do PostgreSQL e testes.
-
-#### André Luiz Pereira Emílio
-- Suporte nas regras de negócio.
-- Testes funcionais.
-- Colaboração na modelagem das entidades.
-- Apoio na documentação.
-
-</details>
-
-<details>
-<summary><strong>Instalação e Execução do Projeto</strong></summary>
-
-### 1. Pré-requisitos
-
-#### Laravel
-Guia oficial: https://laravel.com/docs/master/installation
-
-Requisitos:
 - PHP 8.2+
 - Composer
-- Extensão pdo_pgsql
+- Node.js + NPM
+- PostgreSQL
+- Extensões padrão do Laravel
 
-#### PostgreSQL
-Guia: https://www.postgresql.org/download/
+---
 
-Criação do banco:
+## 1 Clone o repositório
 
-```sql
-CREATE DATABASE straight-tickets;
-```
-
-### 2. Clonar o projeto
 ```bash
-git clone git@github.com:Chemical-dumbneer/straight-tickets.git
+git clone https://github.com/seuusuario/straight-tickets.git
 cd straight-tickets
 ```
 
-### 3. Instalar dependências
+---
+
+## 2 Instale dependências PHP
+
 ```bash
 composer install
 ```
 
-### 4. Configurar o .env
-```bash
-cp .env.example .env
-```
+---
 
-Ajuste para PostgreSQL:
+## 3 Instale dependências NPM
 
-```
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=straight-tickets
-DB_USERNAME=postgres
-DB_PASSWORD=sua_senha
-```
-
-Gerar chave:
-```bash
-php artisan key:generate
-```
-
-### 5. Migrações e Seeders
-```bash
-php artisan migrate --seed
-```
-
-### 6. Frontend (opcional)
 ```bash
 npm install
 npm run build
 ```
 
-### 7. Executar servidor
+---
+
+## 4 Configure o arquivo `.env`
+
+```bash
+cp .env.example .env
+```
+
+Edite com suas credenciais PostgreSQL:
+
+```
+DB_CONNECTION=pgsql
+DB_HOST=localhost
+DB_PORT=5432
+DB_DATABASE=straight_tickets
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+---
+
+## 5 Gere a chave da aplicação
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## 6 Rode as migrations + seeders
+
+```bash
+php artisan migrate --seed
+```
+
+O projeto já inclui:
+- 1 usuário comum
+- 1 técnico
+
+---
+
+## 7 Rode o servidor
+
 ```bash
 php artisan serve
 ```
 
-Acessar: http://localhost:8000
+Acesse em:
+
+```
+http://localhost:8000
+```
 
 </details>
 
+---
+
+# Preview do Sistema
 <details>
-<summary><strong>Observações Finais</strong></summary>
+<summary><strong>Expandir screenshots</strong></summary>
 
-- O sistema está pronto para receber um módulo de API no futuro.
-- A lógica de negócio está isolada e reutilizável.
-- A arquitetura permite expansão simples para outras camadas (como REST).
+![Visão da fila de tickets](assets/screenshot-ticket_queue.png)
+
+![Visão da timeline de um ticket](assets/screenshot-ticket_timeline.png)
 
 </details>
+
+---
+
+# Arquitetura do Projeto
+<details>
+<summary><strong>Expandir detalhes técnicos</strong></summary>
+
+- **Camada Service:**  
+  Toda a lógica de negócio (Tickets, Usuários, Interações).
+
+- **Policies:**  
+  Controle de acesso centralizado (usuário só vê seus tickets, técnicos veem todos).
+
+- **Blade Components:**  
+  Componentes reutilizáveis como cartões de tickets, badges e layouts.
+
+- **Livewire 3:**  
+  Interatividade reativa sem JavaScript manual.
+
+- **TailwindCSS:**  
+  Estilização consistente, minimalista e moderna.
+
+</details>
+
+---
+
+# Roadmap
+
+- [x] Release web completa
+- [ ] API pública v1 (Tickets, Users, Interactions)
+- [ ] Autenticação via Token (Sanctum)
+- [ ] Testes Automatizados
+- [ ] Dashboard analítico
+- [ ] Suporte a anexos nos tickets
+- [ ] Tema claro/escuro
+
+---
+
+# Licença
+
+Este projeto é distribuído para fins de estudo e demonstração.  
+Caso queira utilizá-lo comercialmente, entre em contato.
+
+---
+
+# Agradecimentos
+
+Agradecemos à orientação do professor e às ferramentas open-source que possibilitaram o desenvolvimento deste projeto.
